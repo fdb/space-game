@@ -68,7 +68,7 @@ function createEnemy(container, x, y) {
     dx: 0,
     dy: 0,
     element,
-    cooldown: rand(0, ENEMY_COOLDOWN)
+    cooldown: rand(ENEMY_COOLDOWN / 2, ENEMY_COOLDOWN * 2)
   };
   GAME_STATE.enemies.push(enemy);
 }
