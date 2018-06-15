@@ -57,12 +57,14 @@ footer {
 
 .game .enemy {
   position: absolute;
+  margin-left: -20px;
   transform: translate(-50%, -50%);
   width: 40px;
 }
 
 .game .player {
   position: absolute;
+  margin-left: -20px;
   transform: translate(-50%, -50%);
   width: 40px;
 }
@@ -70,6 +72,7 @@ footer {
 .game .laser {
   position: absolute;
   transform: translate(-50%, -50%);
+  margin-left: -2.5px;
   height: 30px;
 }
 

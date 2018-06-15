@@ -7,3 +7,4 @@
 * Figure out the key codes
 * Winning / losing condition
 * Ship can go offscreen: clamping
+* Use transform instead of left/top
