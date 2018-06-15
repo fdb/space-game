@@ -87,6 +87,8 @@ function createLaser(container, x, y) {
   container.appendChild(element);
   const laser = { x, y, element };
   GAME_STATE.lasers.push(laser);
+  const audio = new Audio("media/sound/sfx-laser1.ogg");
+  audio.play();
 }
 
 function createEnemyLaser(container, x, y) {
@@ -134,6 +136,8 @@ function destroyEnemy(container, enemy) {
 function destroyPlayer(container, player) {
   container.removeChild(player);
   GAME_STATE.gameOver = true;
+  const audio = new Audio("media/sound/sfx-lose.ogg");
+  audio.play();
 }
 
 function updateLasers(container) {
@@ -212,6 +216,11 @@ function playerHasWon() {
 function update() {
   const container = document.querySelector(".game");
 
+  if (GAME_STATE.gameOver) {
+    document.querySelector(".game-over").style.display = "block";
+    return;
+  }
+
   if (GAME_STATE.leftPressed) {
     GAME_STATE.playerX -= PLAYER_MAX_SPEED;
   }
@@ -238,9 +247,6 @@ function update() {
   updateEnemyLasers(container);
   if (playerHasWon()) {
     document.querySelector(".congratulations").style.display = "block";
-  }
-  if (GAME_STATE.gameOver) {
-    document.querySelector(".game-over").style.display = "block";
   }
 
   window.requestAnimationFrame(update);
