@@ -9,6 +9,7 @@ const ENEMIES_PER_ROW = 10;
 const ENEMY_HORIZONTAL_PADDING = 80;
 const ENEMY_VERTICAL_PADDING = 70;
 const ENEMY_VERTICAL_SPACING = 80;
+const ENEMY_COOLDOWN = 300;
 
 const PLAYER_MAX_SPEED = 5;
 const LASER_MAX_SPEED = 5;
@@ -22,7 +23,9 @@ const GAME_STATE = {
   playerY: 0,
   laserCooldown: 0,
   enemies: [],
-  lasers: []
+  lasers: [],
+  enemyLasers: [],
+  gameOver: false
 };
 
 function rectsIntersect(r1, r2) {
@@ -44,6 +47,12 @@ function clamp(v, min, max) {
   }
 }
 
+function rand(min, max) {
+  if (min === undefined) min = 0;
+  if (max === undefined) max = 1;
+  return min + Math.random() * (max - min);
+}
+
 function setPosition(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`;
 }
@@ -58,7 +67,8 @@ function createEnemy(container, x, y) {
     y,
     dx: 0,
     dy: 0,
-    element
+    element,
+    cooldown: rand(0, ENEMY_COOLDOWN)
   };
   GAME_STATE.enemies.push(enemy);
 }
@@ -77,6 +87,15 @@ function createLaser(container, x, y) {
   container.appendChild(element);
   const laser = { x, y, element };
   GAME_STATE.lasers.push(laser);
+}
+
+function createEnemyLaser(container, x, y) {
+  const element = document.createElement("img");
+  element.src = "media/img/laser-red-5.png";
+  element.className = "enemy-laser";
+  container.appendChild(element);
+  const laser = { x, y, element };
+  GAME_STATE.enemyLasers.push(laser);
 }
 
 function init() {
@@ -112,6 +131,11 @@ function destroyEnemy(container, enemy) {
   enemy.isDead = true;
 }
 
+function destroyPlayer(container, player) {
+  container.removeChild(player);
+  GAME_STATE.gameOver = true;
+}
+
 function updateLasers(container) {
   const lasers = GAME_STATE.lasers;
   for (let i = 0; i < lasers.length; i++) {
@@ -138,6 +162,27 @@ function updateLasers(container) {
   GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
 
+function updateEnemyLasers(container) {
+  const lasers = GAME_STATE.enemyLasers;
+  for (let i = 0; i < lasers.length; i++) {
+    const laser = lasers[i];
+    laser.y += LASER_MAX_SPEED;
+    if (laser.y > GAME_HEIGHT) {
+      destroyLaser(container, laser);
+    }
+    setPosition(laser.element, laser.x, laser.y);
+    const r1 = laser.element.getBoundingClientRect();
+    const player = document.querySelector(".player");
+    const r2 = player.getBoundingClientRect();
+    if (rectsIntersect(r1, r2)) {
+      // Player was hit
+      destroyPlayer(container, player);
+      break;
+    }
+  }
+  GAME_STATE.enemyLasers = GAME_STATE.enemyLasers.filter(e => !e.isDead);
+}
+
 function updateEnemies(container) {
   const dx = Math.sin(Date.now() / 1000.0) * 50;
   const dy = Math.cos(Date.now() / 1000.0) * 10;
@@ -147,7 +192,14 @@ function updateEnemies(container) {
     const enemy = enemies[i];
     enemy.dx = dx;
     enemy.dy = dy;
-    setPosition(enemy.element, enemy.x + enemy.dx, enemy.y + enemy.dy);
+    const x = enemy.x + enemy.dx;
+    const y = enemy.y + enemy.dy;
+    setPosition(enemy.element, x, y);
+    enemy.cooldown -= 1;
+    if (enemy.cooldown <= 0) {
+      enemy.cooldown = ENEMY_COOLDOWN;
+      createEnemyLaser(container, x, y);
+    }
   }
   GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead);
 }
@@ -183,8 +235,12 @@ function update() {
   updatePlayer();
   updateLasers(container);
   updateEnemies(container);
+  updateEnemyLasers(container);
   if (playerHasWon()) {
     document.querySelector(".congratulations").style.display = "block";
+  }
+  if (GAME_STATE.gameOver) {
+    document.querySelector(".game-over").style.display = "block";
   }
 
   window.requestAnimationFrame(update);

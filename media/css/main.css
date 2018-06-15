@@ -58,20 +58,24 @@ footer {
 .game .enemy {
   position: absolute;
   margin-left: -20px;
-  transform: translate(-50%, -50%);
+  margin-top: -18px;
   width: 40px;
 }
 
 .game .player {
   position: absolute;
   margin-left: -20px;
-  transform: translate(-50%, -50%);
   width: 40px;
 }
 
 .game .laser {
   position: absolute;
-  transform: translate(-50%, -50%);
+  margin-left: -2.5px;
+  height: 30px;
+}
+
+.game .enemy-laser {
+  position: absolute;
   margin-left: -2.5px;
   height: 30px;
 }
@@ -80,6 +84,18 @@ footer {
   display: none;
   position: absolute;
   background: #c7a526;
+  color: white;
+  padding: 20px 50px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  text-align: center;
+  animation: pop-in 1s;
+}
+
+.game-over {
+  display: none;
+  position: absolute;
+  background: #e60d0d;
   color: white;
   padding: 20px 50px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);

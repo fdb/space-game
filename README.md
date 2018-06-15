@@ -8,3 +8,4 @@
 * Winning / losing condition
 * Ship can go offscreen: clamping
 * Use transform instead of left/top
+* When using transform, center using margin-left: negative value;
