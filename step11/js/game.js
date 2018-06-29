@@ -230,12 +230,21 @@ function init() {
   }
 }
 
+function playerHasWon() {
+  return GAME_STATE.enemies.length === 0;
+}
+
 function update(e) {
   const currentTime = Date.now();
   const dt = (currentTime - GAME_STATE.lastTime) / 1000.0;
 
   if (GAME_STATE.gameOver) {
     document.querySelector(".game-over").style.display = "block";
+    return;
+  }
+
+  if (playerHasWon()) {
+    document.querySelector(".congratulations").style.display = "block";
     return;
   }
 

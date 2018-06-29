@@ -26,7 +26,6 @@ const GAME_STATE = {
   playerCooldown: 0,
   lasers: [],
   enemies: [],
-  enemiesCooldown: 0,
   enemyLasers: [],
 };
 

@@ -242,15 +242,16 @@ function update() {
     return;
   }
 
+  if (playerHasWon()) {
+    document.querySelector(".congratulations").style.display = "block";
+    return;
+  }
+
   const container = document.querySelector(".game");
   updatePlayer(dt, container);
   updateLasers(dt, container);
   updateEnemies(dt, container);
   updateEnemyLasers(dt, container);
-
-  if (playerHasWon()) {
-    document.querySelector(".congratulations").style.display = "block";
-  }
 
   GAME_STATE.lastTime = currentTime;
   window.requestAnimationFrame(update);
