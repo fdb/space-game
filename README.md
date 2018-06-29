@@ -1,4 +1,4 @@
-# spacegame
+# Space Invaders
 
 ![Screenshot of the game](https://raw.githubusercontent.com/fdb/spacegame/master/.github/screenshot.png)
 
@@ -6,6 +6,8 @@ Demo game for teaching purposes.
 
 ## Teaching steps
 
+* Create a player character using JavaScript
+* Use keyPress events first. Show that they are quite "choppy". Switch to keyUp / keyDown and update loop.
 * Create entities using createElement
 * Find elements using querySelectorAll / querySelector
 * Change size of elements through JS or CSS.
@@ -19,7 +21,6 @@ Demo game for teaching purposes.
 * When using transform, center using margin-left: negative value;
 * Download asset files from Kenney (http://kenney.nl/assets/space-shooter-redux)
 * Rename asset files using [Bulk Rename Utility](http://www.bulkrenameutility.co.uk/Main_Intro.php) on Windows.
-* Use keyPress events first. Show that they are quite "choppy". Switch to keyUp / keyDown and update loop.
 
 ## Credits
 

@@ -59,65 +59,14 @@ function setPosition(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`;
 }
 
-function createEnemy(container, x, y) {
-  const element = document.createElement("img");
-  element.src = "media/img/enemy-blue-1.png";
-  element.className = "enemy";
-  container.appendChild(element);
-  const enemy = {
-    x,
-    y,
-    dx: 0,
-    dy: 0,
-    element,
-    cooldown: rand(0.5, ENEMY_COOLDOWN)
-  };
-  GAME_STATE.enemies.push(enemy);
-}
-
-function createPlayer(container, x, y) {
-  const player = document.createElement("img");
-  player.src = "media/img/player-blue-1.png";
-  player.className = "player";
-  container.appendChild(player);
-}
-
-function createLaser(container, x, y) {
-  const element = document.createElement("img");
-  element.src = "media/img/laser-blue-1.png";
-  element.className = "laser";
-  container.appendChild(element);
-  const laser = { x, y, element };
-  GAME_STATE.lasers.push(laser);
-  const audio = new Audio("media/sound/sfx-laser1.ogg");
-  audio.play();
-}
-
-function createEnemyLaser(container, x, y) {
-  const element = document.createElement("img");
-  element.src = "media/img/laser-red-5.png";
-  element.className = "enemy-laser";
-  container.appendChild(element);
-  const laser = { x, y, element };
-  GAME_STATE.enemyLasers.push(laser);
-}
-
-function init() {
-  const container = document.querySelector(".game");
-  const enemySpacing =
-    (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 2) / (ENEMIES_PER_ROW - 1);
-
-  for (let j = 0; j < 3; j++) {
-    const y = ENEMY_VERTICAL_PADDING + j * ENEMY_VERTICAL_SPACING;
-    for (let i = 0; i < ENEMIES_PER_ROW; i++) {
-      const x = i * enemySpacing + ENEMY_HORIZONTAL_PADDING;
-      createEnemy(container, x, y);
-    }
-  }
-
+function createPlayer(container) {
   GAME_STATE.playerX = GAME_WIDTH / 2;
   GAME_STATE.playerY = GAME_HEIGHT - 50;
-  createPlayer(container, GAME_STATE.playerX, GAME_STATE.playerY);
+  const player = document.createElement("img");
+  player.src = "img/player-blue-1.png";
+  player.className = "player";
+  container.appendChild(player);
+  setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
 
 function updatePlayer(dt, container) {
@@ -146,20 +95,64 @@ function updatePlayer(dt, container) {
   setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
 
-function destroyLaser(container, laser) {
-  container.removeChild(laser.element);
-  laser.isDead = true;
+function destroyPlayer(container, player) {
+  container.removeChild(player);
+  GAME_STATE.gameOver = true;
+  const audio = new Audio("sound/sfx-lose.ogg");
+  audio.play();
 }
+
+function createEnemy(container, x, y) {
+  const element = document.createElement("img");
+  element.src = "img/enemy-blue-1.png";
+  element.className = "enemy";
+  container.appendChild(element);
+  const enemy = {
+    x,
+    y,
+    dx: 0,
+    dy: 0,
+    element,
+    cooldown: rand(0.5, ENEMY_COOLDOWN)
+  };
+  GAME_STATE.enemies.push(enemy);
+}
+
+function updateEnemies(dt, container) {
+  const dx = Math.sin(GAME_STATE.lastTime / 1000.0) * 50;
+  const dy = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
+
+  const enemies = GAME_STATE.enemies;
+  for (let i = 0; i < enemies.length; i++) {
+    const enemy = enemies[i];
+    enemy.dx = dx;
+    enemy.dy = dy;
+    const x = enemy.x + enemy.dx;
+    const y = enemy.y + enemy.dy;
+    setPosition(enemy.element, x, y);
+    enemy.cooldown -= dt;
+    if (enemy.cooldown <= 0) {
+      createEnemyLaser(container, x, y);
+      enemy.cooldown = ENEMY_COOLDOWN;
+    }
+  }
+  GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead);
+}
+
 
 function destroyEnemy(container, enemy) {
   container.removeChild(enemy.element);
   enemy.isDead = true;
 }
 
-function destroyPlayer(container, player) {
-  container.removeChild(player);
-  GAME_STATE.gameOver = true;
-  const audio = new Audio("media/sound/sfx-lose.ogg");
+function createLaser(container, x, y) {
+  const element = document.createElement("img");
+  element.src = "img/laser-blue-1.png";
+  element.className = "laser";
+  container.appendChild(element);
+  const laser = { x, y, element };
+  GAME_STATE.lasers.push(laser);
+  const audio = new Audio("sound/sfx-laser1.ogg");
   audio.play();
 }
 
@@ -189,6 +182,20 @@ function updateLasers(dt, container) {
   GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
 
+function destroyLaser(container, laser) {
+  container.removeChild(laser.element);
+  laser.isDead = true;
+}
+
+function createEnemyLaser(container, x, y) {
+  const element = document.createElement("img");
+  element.src = "img/laser-red-5.png";
+  element.className = "enemy-laser";
+  container.appendChild(element);
+  const laser = { x, y, element };
+  GAME_STATE.enemyLasers.push(laser);
+}
+
 function updateEnemyLasers(dt, container) {
   const lasers = GAME_STATE.enemyLasers;
   for (let i = 0; i < lasers.length; i++) {
@@ -210,25 +217,20 @@ function updateEnemyLasers(dt, container) {
   GAME_STATE.enemyLasers = GAME_STATE.enemyLasers.filter(e => !e.isDead);
 }
 
-function updateEnemies(dt, container) {
-  const dx = Math.sin(GAME_STATE.lastTime / 1000.0) * 50;
-  const dy = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
+function init() {
+  const container = document.querySelector(".game");
+  const enemySpacing =
+    (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 2) / (ENEMIES_PER_ROW - 1);
 
-  const enemies = GAME_STATE.enemies;
-  for (let i = 0; i < enemies.length; i++) {
-    const enemy = enemies[i];
-    enemy.dx = dx;
-    enemy.dy = dy;
-    const x = enemy.x + enemy.dx;
-    const y = enemy.y + enemy.dy;
-    setPosition(enemy.element, x, y);
-    enemy.cooldown -= dt;
-    if (enemy.cooldown <= 0) {
-      createEnemyLaser(container, x, y);
-      enemy.cooldown = ENEMY_COOLDOWN;
+  for (let j = 0; j < 3; j++) {
+    const y = ENEMY_VERTICAL_PADDING + j * ENEMY_VERTICAL_SPACING;
+    for (let i = 0; i < ENEMIES_PER_ROW; i++) {
+      const x = i * enemySpacing + ENEMY_HORIZONTAL_PADDING;
+      createEnemy(container, x, y);
     }
   }
-  GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead);
+
+  createPlayer(container);
 }
 
 function playerHasWon() {
