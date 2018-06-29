@@ -115,8 +115,6 @@ function createEnemy(container, x, y) {
   const enemy = {
     x,
     y,
-    dx: 0,
-    dy: 0,
     element
   };
   GAME_STATE.enemies.push(enemy);

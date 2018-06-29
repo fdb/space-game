@@ -11,3 +11,5 @@ We divide the space of the GAME_WIDTH (minus the padding on both sides) evenly o
 Just like we have a `updatePlayer` and `updateLasers` method, we create a `updateEnemies` function.
 
 To have the enemies rotate, we use a sine/cosine function. This rotates them around a circle, based on the current time.
+
+Note that our lasers have no effect: whenever they hit an enemy, nothing happens. We will change this in step 7.
