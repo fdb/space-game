@@ -23,9 +23,9 @@ const GAME_STATE = {
   spacePressed: false,
   playerX: 0,
   playerY: 0,
-  laserCooldown: 0,
-  enemies: [],
+  playerCooldown: 0,
   lasers: [],
+  enemies: [],
   enemyLasers: [],
   gameOver: false
 };
@@ -83,12 +83,12 @@ function updatePlayer(dt, container) {
     GAME_WIDTH - PLAYER_WIDTH
   );
 
-  if (GAME_STATE.spacePressed && GAME_STATE.laserCooldown <= 0) {
+  if (GAME_STATE.spacePressed && GAME_STATE.playerCooldown <= 0) {
     createLaser(container, GAME_STATE.playerX, GAME_STATE.playerY);
-    GAME_STATE.laserCooldown = LASER_COOLDOWN;
+    GAME_STATE.playerCooldown = LASER_COOLDOWN;
   }
-  if (GAME_STATE.laserCooldown > 0) {
-    GAME_STATE.laserCooldown -= dt;
+  if (GAME_STATE.playerCooldown > 0) {
+    GAME_STATE.playerCooldown -= dt;
   }
 
   const player = document.querySelector(".player");
@@ -100,6 +100,49 @@ function destroyPlayer(container, player) {
   GAME_STATE.gameOver = true;
   const audio = new Audio("sound/sfx-lose.ogg");
   audio.play();
+}
+
+function createLaser(container, x, y) {
+  const element = document.createElement("img");
+  element.src = "img/laser-blue-1.png";
+  element.className = "laser";
+  container.appendChild(element);
+  const laser = { x, y, element };
+  GAME_STATE.lasers.push(laser);
+  const audio = new Audio("sound/sfx-laser1.ogg");
+  audio.play();
+  setPosition(element, x, y);
+}
+
+function updateLasers(dt, container) {
+  const lasers = GAME_STATE.lasers;
+  for (let i = 0; i < lasers.length; i++) {
+    const laser = lasers[i];
+    laser.y -= dt * LASER_MAX_SPEED;
+    if (laser.y < 0) {
+      destroyLaser(container, laser);
+    }
+    setPosition(laser.element, laser.x, laser.y);
+    const r1 = laser.element.getBoundingClientRect();
+    const enemies = GAME_STATE.enemies;
+    for (let j = 0; j < enemies.length; j++) {
+      const enemy = enemies[j];
+      if (enemy.isDead) continue;
+      const r2 = enemy.element.getBoundingClientRect();
+      if (rectsIntersect(r1, r2)) {
+        // Enemy was hit
+        destroyEnemy(container, enemy);
+        destroyLaser(container, laser);
+        break;
+      }
+    }
+  }
+  GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
+}
+
+function destroyLaser(container, laser) {
+  container.removeChild(laser.element);
+  laser.isDead = true;
 }
 
 function createEnemy(container, x, y) {
@@ -143,48 +186,6 @@ function updateEnemies(dt, container) {
 function destroyEnemy(container, enemy) {
   container.removeChild(enemy.element);
   enemy.isDead = true;
-}
-
-function createLaser(container, x, y) {
-  const element = document.createElement("img");
-  element.src = "img/laser-blue-1.png";
-  element.className = "laser";
-  container.appendChild(element);
-  const laser = { x, y, element };
-  GAME_STATE.lasers.push(laser);
-  const audio = new Audio("sound/sfx-laser1.ogg");
-  audio.play();
-}
-
-function updateLasers(dt, container) {
-  const lasers = GAME_STATE.lasers;
-  for (let i = 0; i < lasers.length; i++) {
-    const laser = lasers[i];
-    laser.y -= dt * LASER_MAX_SPEED;
-    if (laser.y < 0) {
-      destroyLaser(container, laser);
-    }
-    setPosition(laser.element, laser.x, laser.y);
-    const r1 = laser.element.getBoundingClientRect();
-    const enemies = GAME_STATE.enemies;
-    for (let j = 0; j < enemies.length; j++) {
-      const enemy = enemies[j];
-      if (enemy.isDead) continue;
-      const r2 = enemy.element.getBoundingClientRect();
-      if (rectsIntersect(r1, r2)) {
-        // Enemy was hit
-        destroyEnemy(container, enemy);
-        destroyLaser(container, laser);
-        break;
-      }
-    }
-  }
-  GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
-}
-
-function destroyLaser(container, laser) {
-  container.removeChild(laser.element);
-  laser.isDead = true;
 }
 
 function createEnemyLaser(container, x, y) {
@@ -240,17 +241,18 @@ function playerHasWon() {
 function update() {
   const currentTime = Date.now();
   const dt = (currentTime - GAME_STATE.lastTime) / 1000.0;
-  const container = document.querySelector(".game");
 
   if (GAME_STATE.gameOver) {
     document.querySelector(".game-over").style.display = "block";
     return;
   }
 
+  const container = document.querySelector(".game");
   updatePlayer(dt, container);
   updateLasers(dt, container);
   updateEnemies(dt, container);
   updateEnemyLasers(dt, container);
+
   if (playerHasWon()) {
     document.querySelector(".congratulations").style.display = "block";
   }

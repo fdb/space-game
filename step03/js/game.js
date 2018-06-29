@@ -6,8 +6,10 @@ const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
 
 const PLAYER_WIDTH = 20;
+const PLAYER_MAX_SPEED = 600.0;
 
 const GAME_STATE = {
+  lastTime: Date.now(),
   leftPressed: false,
   rightPressed: false,
   spacePressed: false,
@@ -37,12 +39,12 @@ function createPlayer(container, x, y) {
   setPosition(player, x, y);
 }
 
-function updatePlayer() {
+function updatePlayer(dt) {
   if (GAME_STATE.leftPressed) {
-    GAME_STATE.playerX -= 5;
+    GAME_STATE.playerX -= dt * PLAYER_MAX_SPEED;
   }
   if (GAME_STATE.rightPressed) {
-    GAME_STATE.playerX += 5;
+    GAME_STATE.playerX += dt * PLAYER_MAX_SPEED;
   }
 
   GAME_STATE.playerX = clamp(
@@ -63,7 +65,12 @@ function init() {
 }
 
 function update(e) {
-  updatePlayer();
+  const currentTime = Date.now();
+  const dt = (currentTime - GAME_STATE.lastTime) / 1000.0;
+
+  updatePlayer(dt);
+
+  GAME_STATE.lastTime = currentTime;
   window.requestAnimationFrame(update);
 }
 
