@@ -153,12 +153,11 @@ function createEnemy(container, x, y) {
   const enemy = {
     x,
     y,
-    dx: 0,
-    dy: 0,
     element,
     cooldown: rand(0.5, ENEMY_COOLDOWN)
   };
   GAME_STATE.enemies.push(enemy);
+  setPosition(element, x, y);
 }
 
 function updateEnemies(dt, container) {
@@ -168,10 +167,8 @@ function updateEnemies(dt, container) {
   const enemies = GAME_STATE.enemies;
   for (let i = 0; i < enemies.length; i++) {
     const enemy = enemies[i];
-    enemy.dx = dx;
-    enemy.dy = dy;
-    const x = enemy.x + enemy.dx;
-    const y = enemy.y + enemy.dy;
+    const x = enemy.x + dx;
+    const y = enemy.y + dy;
     setPosition(enemy.element, x, y);
     enemy.cooldown -= dt;
     if (enemy.cooldown <= 0) {
@@ -181,7 +178,6 @@ function updateEnemies(dt, container) {
   }
   GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead);
 }
-
 
 function destroyEnemy(container, enemy) {
   container.removeChild(enemy.element);
@@ -220,9 +216,9 @@ function updateEnemyLasers(dt, container) {
 
 function init() {
   const container = document.querySelector(".game");
-  const enemySpacing =
-    (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 2) / (ENEMIES_PER_ROW - 1);
+  createPlayer(container);
 
+  const enemySpacing = (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 2) / (ENEMIES_PER_ROW - 1);
   for (let j = 0; j < 3; j++) {
     const y = ENEMY_VERTICAL_PADDING + j * ENEMY_VERTICAL_SPACING;
     for (let i = 0; i < ENEMIES_PER_ROW; i++) {
@@ -230,8 +226,6 @@ function init() {
       createEnemy(container, x, y);
     }
   }
-
-  createPlayer(container);
 }
 
 function playerHasWon() {

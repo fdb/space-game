@@ -10,19 +10,19 @@ function setPosition(el, x, y) {
   el.style.transform = `translate(${x}px, ${y}px)`;
 }
 
-function createPlayer(container, x, y) {
+function createPlayer(container) {
+  GAME_STATE.playerX = GAME_WIDTH / 2;
+  GAME_STATE.playerY = GAME_HEIGHT - 50;
   const player = document.createElement("img");
   player.src = "img/player-blue-1.png";
   player.className = "player";
   container.appendChild(player);
-  setPosition(player, x, y);
+  setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
 
 function init() {
   const container = document.querySelector(".game");
-  GAME_STATE.playerX = GAME_WIDTH / 2;
-  GAME_STATE.playerY = GAME_HEIGHT - 50;
-  createPlayer(container, GAME_STATE.playerX, GAME_STATE.playerY);
+  createPlayer(container);
 }
 
 function onKeyPress(e) {

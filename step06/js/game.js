@@ -10,6 +10,11 @@ const PLAYER_MAX_SPEED = 600.0;
 const LASER_MAX_SPEED = 300.0;
 const LASER_COOLDOWN = 0.5;
 
+const ENEMIES_PER_ROW = 10;
+const ENEMY_HORIZONTAL_PADDING = 80;
+const ENEMY_VERTICAL_PADDING = 70;
+const ENEMY_VERTICAL_SPACING = 80;
+
 const GAME_STATE = {
   lastTime: Date.now(),
   leftPressed: false,
@@ -19,6 +24,7 @@ const GAME_STATE = {
   playerY: 0,
   playerCooldown: 0,
   lasers: [],
+  enemies: [],
 };
 
 function setPosition(el, x, y) {
@@ -88,13 +94,60 @@ function updateLasers(dt, container) {
   for (let i = 0; i < lasers.length; i++) {
     const laser = lasers[i];
     laser.y -= dt * LASER_MAX_SPEED;
+    if (laser.y < 0) {
+      destroyLaser(container, laser);
+    }
     setPosition(laser.element, laser.x, laser.y);
+  }
+  GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
+}
+
+function destroyLaser(container, laser) {
+  container.removeChild(laser.element);
+  laser.isDead = true;
+}
+
+function createEnemy(container, x, y) {
+  const element = document.createElement("img");
+  element.src = "img/enemy-blue-1.png";
+  element.className = "enemy";
+  container.appendChild(element);
+  const enemy = {
+    x,
+    y,
+    dx: 0,
+    dy: 0,
+    element
+  };
+  GAME_STATE.enemies.push(enemy);
+  setPosition(element, x, y);
+}
+
+function updateEnemies(dt, container) {
+  const dx = Math.sin(GAME_STATE.lastTime / 1000.0) * 50;
+  const dy = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
+
+  const enemies = GAME_STATE.enemies;
+  for (let i = 0; i < enemies.length; i++) {
+    const enemy = enemies[i];
+    const x = enemy.x + dx;
+    const y = enemy.y + dy;
+    setPosition(enemy.element, x, y);
   }
 }
 
 function init() {
   const container = document.querySelector(".game");
   createPlayer(container);
+
+  const enemySpacing = (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 2) / (ENEMIES_PER_ROW - 1);
+  for (let j = 0; j < 3; j++) {
+    const y = ENEMY_VERTICAL_PADDING + j * ENEMY_VERTICAL_SPACING;
+    for (let i = 0; i < ENEMIES_PER_ROW; i++) {
+      const x = i * enemySpacing + ENEMY_HORIZONTAL_PADDING;
+      createEnemy(container, x, y);
+    }
+  }
 }
 
 function update(e) {
@@ -104,6 +157,7 @@ function update(e) {
   const container = document.querySelector(".game");
   updatePlayer(dt, container);
   updateLasers(dt, container);
+  updateEnemies(dt, container);
 
   GAME_STATE.lastTime = currentTime;
   window.requestAnimationFrame(update);

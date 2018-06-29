@@ -32,11 +32,13 @@ function clamp(v, min, max) {
 }
 
 function createPlayer(container, x, y) {
+  GAME_STATE.playerX = GAME_WIDTH / 2;
+  GAME_STATE.playerY = GAME_HEIGHT - 50;
   const player = document.createElement("img");
   player.src = "img/player-blue-1.png";
   player.className = "player";
   container.appendChild(player);
-  setPosition(player, x, y);
+  setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
 
 function updatePlayer(dt) {
@@ -59,8 +61,6 @@ function updatePlayer(dt) {
 
 function init() {
   const container = document.querySelector(".game");
-  GAME_STATE.playerX = GAME_WIDTH / 2;
-  GAME_STATE.playerY = GAME_HEIGHT - 50;
   createPlayer(container);
 }
 
