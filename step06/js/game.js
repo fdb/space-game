@@ -27,8 +27,8 @@ const GAME_STATE = {
   enemies: [],
 };
 
-function setPosition(el, x, y) {
-  el.style.transform = `translate(${x}px, ${y}px)`;
+function setPosition($el, x, y) {
+  $el.style.transform = `translate(${x}px, ${y}px)`;
 }
 
 function clamp(v, min, max) {
@@ -41,17 +41,17 @@ function clamp(v, min, max) {
   }
 }
 
-function createPlayer(container) {
+function createPlayer($container) {
   GAME_STATE.playerX = GAME_WIDTH / 2;
   GAME_STATE.playerY = GAME_HEIGHT - 50;
-  const player = document.createElement("img");
-  player.src = "img/player-blue-1.png";
-  player.className = "player";
-  container.appendChild(player);
-  setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
+  const $player = document.createElement("img");
+  $player.src = "img/player-blue-1.png";
+  $player.className = "player";
+  $container.appendChild($player);
+  setPosition($player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
 
-function updatePlayer(dt, container) {
+function updatePlayer(dt, $container) {
   if (GAME_STATE.leftPressed) {
     GAME_STATE.playerX -= dt * PLAYER_MAX_SPEED;
   }
@@ -66,62 +66,62 @@ function updatePlayer(dt, container) {
   );
 
   if (GAME_STATE.spacePressed && GAME_STATE.playerCooldown <= 0) {
-    createLaser(container, GAME_STATE.playerX, GAME_STATE.playerY);
+    createLaser($container, GAME_STATE.playerX, GAME_STATE.playerY);
     GAME_STATE.playerCooldown = LASER_COOLDOWN;
   }
   if (GAME_STATE.playerCooldown > 0) {
     GAME_STATE.playerCooldown -= dt;
   }
 
-  const player = document.querySelector(".player");
-  setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
+  const $player = document.querySelector(".player");
+  setPosition($player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
 
-function createLaser(container, x, y) {
-  const element = document.createElement("img");
-  element.src = "img/laser-blue-1.png";
-  element.className = "laser";
-  container.appendChild(element);
-  const laser = { x, y, element };
+function createLaser($container, x, y) {
+  const $element = document.createElement("img");
+  $element.src = "img/laser-blue-1.png";
+  $element.className = "laser";
+  $container.appendChild($element);
+  const laser = { x, y, $element };
   GAME_STATE.lasers.push(laser);
   const audio = new Audio("sound/sfx-laser1.ogg");
   audio.play();
-  setPosition(element, x, y);
+  setPosition($element, x, y);
 }
 
-function updateLasers(dt, container) {
+function updateLasers(dt, $container) {
   const lasers = GAME_STATE.lasers;
   for (let i = 0; i < lasers.length; i++) {
     const laser = lasers[i];
     laser.y -= dt * LASER_MAX_SPEED;
     if (laser.y < 0) {
-      destroyLaser(container, laser);
+      destroyLaser($container, laser);
     }
-    setPosition(laser.element, laser.x, laser.y);
+    setPosition(laser.$element, laser.x, laser.y);
   }
   GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
 
-function destroyLaser(container, laser) {
-  container.removeChild(laser.element);
+function destroyLaser($container, laser) {
+  $container.removeChild(laser.$element);
   laser.isDead = true;
 }
 
-function createEnemy(container, x, y) {
-  const element = document.createElement("img");
-  element.src = "img/enemy-blue-1.png";
-  element.className = "enemy";
-  container.appendChild(element);
+function createEnemy($container, x, y) {
+  const $element = document.createElement("img");
+  $element.src = "img/enemy-blue-1.png";
+  $element.className = "enemy";
+  $container.appendChild($element);
   const enemy = {
     x,
     y,
-    element
+    $element
   };
   GAME_STATE.enemies.push(enemy);
-  setPosition(element, x, y);
+  setPosition($element, x, y);
 }
 
-function updateEnemies(dt, container) {
+function updateEnemies(dt, $container) {
   const dx = Math.sin(GAME_STATE.lastTime / 1000.0) * 50;
   const dy = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
 
@@ -130,20 +130,20 @@ function updateEnemies(dt, container) {
     const enemy = enemies[i];
     const x = enemy.x + dx;
     const y = enemy.y + dy;
-    setPosition(enemy.element, x, y);
+    setPosition(enemy.$element, x, y);
   }
 }
 
 function init() {
-  const container = document.querySelector(".game");
-  createPlayer(container);
+  const $container = document.querySelector(".game");
+  createPlayer($container);
 
   const enemySpacing = (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 2) / (ENEMIES_PER_ROW - 1);
   for (let j = 0; j < 3; j++) {
     const y = ENEMY_VERTICAL_PADDING + j * ENEMY_VERTICAL_SPACING;
     for (let i = 0; i < ENEMIES_PER_ROW; i++) {
       const x = i * enemySpacing + ENEMY_HORIZONTAL_PADDING;
-      createEnemy(container, x, y);
+      createEnemy($container, x, y);
     }
   }
 }
@@ -152,10 +152,10 @@ function update(e) {
   const currentTime = Date.now();
   const dt = (currentTime - GAME_STATE.lastTime) / 1000.0;
 
-  const container = document.querySelector(".game");
-  updatePlayer(dt, container);
-  updateLasers(dt, container);
-  updateEnemies(dt, container);
+  const $container = document.querySelector(".game");
+  updatePlayer(dt, $container);
+  updateLasers(dt, $container);
+  updateEnemies(dt, $container);
 
   GAME_STATE.lastTime = currentTime;
   window.requestAnimationFrame(update);
