@@ -1,4 +1,6 @@
-# Step 4 - firing lasers
+# Step 4 - Firing lasers
+
+[Play this version](https://rawgit.com/HackYourFutureBelgium/JavaScript2/master/Projects/space-game/step04/index.html)
 
 This is a big step — we can now let our player fire lasers!
 

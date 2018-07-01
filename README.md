@@ -1,26 +1,26 @@
 # Space Invaders
 
-![Screenshot of the game](https://raw.githubusercontent.com/fdb/spacegame/master/.github/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/HackYourFutureBelgium/JavaScript2/master/Projects/space-game/screenshot.png)
 
-Demo game for teaching purposes.
+A clone of [Space Invaders](https://en.wikipedia.org/wiki/Space_Invaders), specially built for teaching purposes!
 
-## Teaching steps
+[Play the game here!](https://www.enigmeta.com/spacegame/final/)
 
-* Create a player character using JavaScript
-* Use keyPress events first. Show that they are quite "choppy". Switch to keyUp / keyDown and update loop.
-* Create entities using createElement
-* Find elements using querySelectorAll / querySelector
-* Change size of elements through JS or CSS.
-* Set position but it doesn't work! Don't forget to set position absolute in CSS.
-* Position:absolute against what? Make sure you set position: relative on game container.
-* Overflow: hidden on game container
-* Figure out the key codes
-* Winning / losing condition
-* Ship can go offscreen: clamping
-* Use transform instead of left/top
-* When using transform, center using margin-left: negative value;
-* Download asset files from Kenney (http://kenney.nl/assets/space-shooter-redux)
-* Rename asset files using [Bulk Rename Utility](http://www.bulkrenameutility.co.uk/Main_Intro.php) on Windows.
+## Step By Step
+
+The project is divided into multiple steps. The `final` folder shows the full game.
+
+* [**Step 1**](./step01): Creating and moving the player
+* [**Step 2**](./step02): Correct key input
+* [**Step 3**](./step03): Correct timing
+* [**Step 4**](./step04): Firing lasers
+* [**Step 5**](./step05): Removing lasers
+* [**Step 6**](./step06): Creating the enemies
+* [**Step 7**](./step07): Hit detection
+* [**Step 8**](./step08): Enemy lasers
+* [**Step 9**](./step09): Random cooldown
+* [**Step 10**](./step10): Losing the game
+* [**Step 11**](./step11): Winning the game
 
 ## Credits
 

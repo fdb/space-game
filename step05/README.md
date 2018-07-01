@@ -1,4 +1,6 @@
-# Step 5 - removing lasers
+# Step 5 - Removing lasers
+
+[Play this version](https://rawgit.com/HackYourFutureBelgium/JavaScript2/master/Projects/space-game/step05/index.html)
 
 Our lasers remain in the document, even when they disappear offscreen. We now use [`removeChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild) to remove an element offscreen.
 

@@ -1,4 +1,6 @@
-# Step 6 - creating the enemies
+# Step 6 - Creating the enemies
+
+[Play this version](https://rawgit.com/HackYourFutureBelgium/JavaScript2/master/Projects/space-game/step06/index.html)
 
 We create a grid of enemies. The amount of enemies per row is fixed, so we calculate the spacing between the enemies as such:
 

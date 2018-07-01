@@ -1,5 +1,7 @@
 # Step 11 - Winning the game
 
+[Play this version](https://rawgit.com/HackYourFutureBelgium/JavaScript2/master/Projects/space-game/step11/index.html)
+
 We win the game when there are no enemies left. We encode this "win state" in a function:
 
 ```

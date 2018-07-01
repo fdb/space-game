@@ -1,4 +1,6 @@
-# Step 8 - Enemy Lasers
+# Step 8 - Enemy lasers
+
+[Play this version](https://rawgit.com/HackYourFutureBelgium/JavaScript2/master/Projects/space-game/step08/index.html)
 
 Just like our player can fire lasers, we now let our enemies fire lasers as well. The code is very similar.
 

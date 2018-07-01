@@ -1,5 +1,7 @@
 # Step 9 - Random cooldown
 
+[Play this version](https://rawgit.com/HackYourFutureBelgium/JavaScript2/master/Projects/space-game/step09/index.html)
+
 This is not very much code but we need to explain our custom `rand` function. It returns a random value between `min` and `max`.
 
 Internally it uses [`Math.random`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random). That function only returns values between 0.0-1.0.
