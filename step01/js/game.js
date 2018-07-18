@@ -1,9 +1,13 @@
+const KEY_CODE_LEFT = 37;
+const KEY_CODE_RIGHT = 39;
+const KEY_CODE_SPACE = 32;
+
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;
 
 const GAME_STATE = {
   playerX: 0,
-  playerY: 0,
+  playerY: 0
 };
 
 function setPosition($el, x, y) {
@@ -25,12 +29,12 @@ function init() {
   createPlayer($container);
 }
 
-function onKeyPress(e) {
-  if (e.key === 'a') {
+function onKeyDown(e) {
+  if (e.keyCode === KEY_CODE_LEFT) {
     GAME_STATE.playerX -= 5;
     const $player = document.querySelector(".player");
     setPosition($player, GAME_STATE.playerX, GAME_STATE.playerY);
-  } else if (e.key === 'd') {
+  } else if (e.keyCode === KEY_CODE_RIGHT) {
     GAME_STATE.playerX += 5;
     const $player = document.querySelector(".player");
     setPosition($player, GAME_STATE.playerX, GAME_STATE.playerY);
@@ -38,4 +42,4 @@ function onKeyPress(e) {
 }
 
 init();
-window.addEventListener("keypress", onKeyPress);
+window.addEventListener("keydown", onKeyDown);
