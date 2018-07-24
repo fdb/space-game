@@ -8,9 +8,9 @@ const GAME_HEIGHT = 600;
 const PLAYER_WIDTH = 20;
 const PLAYER_MAX_SPEED = 600.0;
 const LASER_MAX_SPEED = 300.0;
-const LASER_COOLDOWN = 0.5;
+const LASER_COOLDOWN = 0.1;
 
-const ENEMIES_PER_ROW = 10;
+const ENEMIES_PER_ROW = 20;
 const ENEMY_HORIZONTAL_PADDING = 80;
 const ENEMY_VERTICAL_PADDING = 70;
 const ENEMY_VERTICAL_SPACING = 80;
@@ -215,12 +215,12 @@ function updateEnemyLasers(dt, $container) {
   GAME_STATE.enemyLasers = GAME_STATE.enemyLasers.filter(e => !e.isDead);
 }
 
-
 function init() {
   const $container = document.querySelector(".game");
   createPlayer($container);
 
-  const enemySpacing = (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 2) / (ENEMIES_PER_ROW - 1);
+  const enemySpacing =
+    (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 2) / (ENEMIES_PER_ROW - 1);
   for (let j = 0; j < 3; j++) {
     const y = ENEMY_VERTICAL_PADDING + j * ENEMY_VERTICAL_SPACING;
     for (let i = 0; i < ENEMIES_PER_ROW; i++) {

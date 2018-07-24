@@ -103,8 +103,6 @@ function destroyLaser($container, laser) {
 
 function init() {
   const $container = document.querySelector(".game");
-  GAME_STATE.playerX = GAME_WIDTH / 2;
-  GAME_STATE.playerY = GAME_HEIGHT - 50;
   createPlayer($container);
 }
 

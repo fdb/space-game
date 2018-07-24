@@ -1,6 +1,6 @@
 # Step 1 - Creating and moving the player
 
-Welcome. In this tutorial we're going to build a clone of the infamous Space Invaders game, together. Here's what it looks like: we can move around with the arrow keys, shoot lasers with the space bar.
+Welcome. In this tutorial we're going to build a clone of the infamous Space Invaders game, together. Here's what it looks like: we can move around with the arrow keys and shoot lasers with the space bar.
 
 Of course, because we made the game ourselves, we can tweak it any way we want. We can make the enemies stronger by making them fire faster, or we can increase our own firing rate, making the game much easier.
 
