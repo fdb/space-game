@@ -32,4 +32,18 @@ We then loop through our enemies and calculate the X position as the enemy's X p
 
 When we save and reload, our enemies now move in a circular pattern on screen. Great!
 
-When we try to fire at them our lasers have no effect: whenever they hit an enemy, nothing happens. That's because we haven't implemented "hit testing" yet. We will do that in the next video.
+When we try to fire at them our lasers have no effect: whenever they hit an enemy, nothing happens. That's because we haven't implemented "hit testing" yet.
+
+## Hit Testing
+
+Hit testing is the process of determining whether one element on screen intersects with another element. If our lasers intersect with the enemy ship, the enemy ship should be destroyed. Also, if their lasers intersect with ours, the game is over for us.
+
+We'll treat each element on screen as a rectangle to simplify hit testing. Then we just need to determine if two rectangles intersect, which is much simpler than figuring if arbitrary shapes intersect.
+
+To check if two rectangles intersect, we will use a formula to check when they can't intersect, and reverse that. So when are we sure that two rectangles don't intersect? Well, if the left side of rectangle 2 is past the right side of rectangle 1, they can't intersect, and if the right side of rectangle 2 is left of the left side of rectangle 1, they can't intersect either. Also, if the top of rectangle 2 is past the bottom of rectangle 1, they can't intersect and if the bottom of rectangle 2 is above the top of rectangle 1, they can't intersect either. So if these conditions are NOT met, they are intersecting.
+
+We'll use this function in updateLasers. For every laser, we find its bounds on screen using the convenient "getBoundingClientRect" function. This returns a rectangle object with the properties we need. We then loop through the enemies. For each enemy, we first check if it is dead. This could happen if they get hit by another laser (so if two lasers hit the same ship at the same time). In that case we don't want the laser to be destroyed. We then figure out the bounding rectangle of our enemy ship. We check if the bounding rectangle of the laser and that of the enemy ship intersect. If they do, we destroy both the enemy ship and the laser. We also break out of our loop, since no other ships can be hit by this laser now.
+
+We've already written our destroyLaser function, our destroyEnemy function looks very similar. In fact, it is identical (we don't go into classes in this tutorial series but here you might see why they might be useful to abstract out common behaviour). So we remove the child from the DOM, and mark our abstract enemy data object as "dead". Finally, at the end of our updateEnemies function, we remove all dead enemies.
+
+Let's try it out once more. We can now shoot at the enemy ships, and if we hit one, it disappears! Awesome! The enemies are a bit sitting ducks right now, since they can't fire back. Let's fix that in the next video.
