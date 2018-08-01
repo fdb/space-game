@@ -1,7 +1,5 @@
 # Step 6 - Creating the enemies
 
-[show game with enemies][play this version](https://rawgit.com/HackYourFutureBelgium/JavaScript2/master/Projects/space-game/step06/index.html)
-
 In this part we're going to add our enemies to the game. Adding enemies is similar to adding players and the lasers: we'll use createElement to add them to the DOM, and create an abstract version of each enemy and store the array in the GAME_STATE.
 
 The main difference between the lasers and the enemies is their location. Enemies should be created in a grid. For that, we need to figure out the actual location of each enemy. There are a number of variables for this.
@@ -10,7 +8,7 @@ First up is the number of ships per row. Let's call this ENEMIES_PER_ROW. Let's 
 
 We want to spread our enemies out over game field. We already defined the width of our playing field as the GAME_WIDTH constant. But if we just use this value, our enemies would start at the very edge of the screen. Instead, we want to add some padding. We'll call this ENEMY_HORIZONTAL_PADDING. We have this padding on both sides, so the total usable space for placing the enemies is the GAME_WIDTH minus the horizontal padding, multiplied by two.
 
-We now have the space the correct space to distribute our enemies. We're going to define the "enemy spacing" as the total width each enemy, including the inner space. So the final formula to calculate the enemy spacing is to divide the available space, defined as the GAME_WIDTH minus twice the ENEMY_HORIZONTAL_PADDING, divided by all the enemies minus one.
+We now have the correct space to distribute our enemies. We're going to define the "enemy spacing" as the total width of each enemy, including the inner space. So the final formula to calculate the enemy spacing is to divide the available space, defined as the GAME_WIDTH minus twice the ENEMY_HORIZONTAL_PADDING, divided by all the enemies minus one.
 
 We now have all pieces to calculate the X position of each ship. Each ship has an index, starting at zero. We multiply this by the enemy spacing we calculated, and add the horizontal padding once. Let's show this in detail.
 
