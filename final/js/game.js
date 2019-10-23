@@ -30,6 +30,9 @@ const GAME_STATE = {
   gameOver: false
 };
 
+var nyawa=0;
+var score=0;
+
 function rectsIntersect(r1, r2) {
   return !(
     r2.left > r1.right ||
@@ -182,6 +185,9 @@ function updateEnemies(dt, $container) {
 function destroyEnemy($container, enemy) {
   $container.removeChild(enemy.$element);
   enemy.isDead = true;
+  score += 50;
+  document.getElementById('score').innerHTML = score;
+  document.getElementById('total').innerHTML = score;
 }
 
 function createEnemyLaser($container, x, y) {
@@ -208,14 +214,23 @@ function updateEnemyLasers(dt, $container) {
     const r2 = player.getBoundingClientRect();
     if (rectsIntersect(r1, r2)) {
       // Player was hit
-      destroyPlayer($container, player);
-      break;
+      nyawa -= 1;
+      document.getElementById('nyawa').innerHTML = nyawa;
+      destroyLaser($container, laser);
+      if(nyawa == 0){
+        destroyPlayer($container, player);
+        break;
+      }
     }
   }
   GAME_STATE.enemyLasers = GAME_STATE.enemyLasers.filter(e => !e.isDead);
 }
 
 function init() {
+  nyawa = 5;
+  score = 0;
+  document.getElementById('nyawa').innerHTML = nyawa;
+  document.getElementById('score').innerHTML = score;
   const $container = document.querySelector(".game");
   createPlayer($container);
 
